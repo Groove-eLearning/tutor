@@ -14,9 +14,9 @@ RUN apt update && \
     apt install -y libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
     xz-utils tk-dev libffi-dev liblzma-dev python-openssl git
-ARG PYTHON_VERSION=3.8.6
+ARG PYTHON_VERSION=3.8.12
 ENV PYENV_ROOT /opt/pyenv
-RUN git clone https://github.com/pyenv/pyenv $PYENV_ROOT --branch v1.2.21 --depth 1
+RUN git clone https://github.com/pyenv/pyenv $PYENV_ROOT --branch v2.1.0 --depth 1
 RUN $PYENV_ROOT/bin/pyenv install $PYTHON_VERSION
 RUN $PYENV_ROOT/versions/$PYTHON_VERSION/bin/python -m venv /openedx/venv
 
@@ -44,6 +44,13 @@ RUN git config --global user.email "tutor@overhang.io" \
 {{ patch("openedx-dockerfile-git-patches-default") }}
 {% else %}
 # Patch edx-platform
+# Fix lms login failure
+# https://github.com/edx/edx-platform/pull/29192/
+RUN git fetch --depth=2 https://github.com/regisb/edx-platform 29ae263a382dde472ab14bef93fe74813f83f271 && git cherry-pick 29ae263a382dde472ab14bef93fe74813f83f271
+# Add themed asset url
+# https://github.com/edx/edx-platform/pull/29503
+RUN git fetch --depth=2 https://github.com/regisb/edx-platform 467ff94a82b020769e25fa0bdcf9c23d347f8fb1 && git cherry-pick 467ff94a82b020769e25fa0bdcf9c23d347f8fb1
+
 {% endif %}
 
 {# Example: RUN git fetch --depth=2 https://github.com/edx/edx-platform <GITSHA1> && git cherry-pick <GITSHA1> #}
@@ -82,7 +89,7 @@ RUN pip install -r ./requirements/edx/base.txt
 RUN pip install django-redis==5.0.0
 
 # Install uwsgi
-RUN pip install uwsgi==2.0.19.1
+RUN pip install uwsgi==2.0.20
 
 {{ patch("openedx-dockerfile-post-python-requirements") }}
 

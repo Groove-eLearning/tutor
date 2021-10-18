@@ -2,6 +2,11 @@
 
 Note: Breaking changes between versions are indicated by "💥".
 
+- [Improvement] Get rid of many Django deprecation warnings that were printed in stdout for every LMS/CMS command.
+- [Bugfix] Fix authentication to LMS when HTTPS is disabled.
+- [Bugfix] Make it possible for plugins to implement the "caddyfile" patch without relying on the "port" local variable.
+- 💥[Improvement] Move the Open edX forum to a [dedicated plugin](https://github.com/overhangio/tutor-forum/) (#450).
+- [Bugfix] Fix frontend failure during login to the LMS.
 - 💥[Improvement] Drop Python 3.5 compatibility.
 - [Bugfix] Fix docker-compose project name in development on nightly branch.
 - 💥[Bugfix] No longer track the Tutor version number in resource labels (and label selectors, which breaks the update of Deployment resources), but instead do so in resource annotations.
