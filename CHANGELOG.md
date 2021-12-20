@@ -25,6 +25,7 @@ Note: Breaking changes between versions are indicated by "💥".
     - Patches "nginx-cms", "nginx-lms", "nginx-extra", "local-docker-compose-nginx-aliases" are replaced by "caddyfile-cms", "caddyfile-lms", "caddyfile", " local-docker-compose-caddy-aliases".
     - Patches "k8s-deployments-nginx-volume-mounts", "k8s-deployments-nginx-volumes" were obsolete and are removed.
     - The `NGINX_HTTP_PORT` setting is renamed to `CADDY_HTTP_PORT`.
+- [Bugfix] Fix building of the `openedx` image on ARM64 due to missing `libgeos-dev`
 
 ## v12.2.0 (2021-12-08)
 

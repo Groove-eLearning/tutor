@@ -137,6 +137,10 @@ Are you sure you want to continue?"""
         upgrade_from_koa(context, config)
         running_version = "lilac"
 
+    if running_version == "lilac":
+        # Nothing to do here
+        running_version = "maple"
+
 
 def upgrade_from_ironwood(context: click.Context, config: Config) -> None:
     click.echo(fmt.title("Upgrading from Ironwood"))

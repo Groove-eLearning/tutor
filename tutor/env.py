@@ -337,6 +337,7 @@ def current_release(root: str) -> str:
         "10": "juniper",
         "11": "koa",
         "12": "lilac",
+        "13": "maple",
     }[current_version(root).split(".")[0]]
 
 
