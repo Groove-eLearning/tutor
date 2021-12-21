@@ -134,6 +134,13 @@ def init(context: BaseComposeContext, limit: str) -> None:
     jobs.initialise(runner, limit_to=limit)
 
 
+@click.pass_obj
+def initialise_plugin(context, input_plugin_name):
+    config = tutor_config.load(context.root)
+    runner = context.job_runner(config)
+    jobs.initialise_plugin(runner, input_plugin_name)
+
+
 @click.command(help="Create an Open edX user and interactively set their password")
 @click.option("--superuser", is_flag=True, help="Make superuser")
 @click.option("--staff", is_flag=True, help="Make staff user")
