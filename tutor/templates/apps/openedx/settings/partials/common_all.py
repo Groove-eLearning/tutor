@@ -158,6 +158,7 @@ JWT_AUTH["JWT_ISSUERS"] = [
 
 # Enable/Disable some features globally
 FEATURES["ENABLE_DISCUSSION_SERVICE"] = False
+FEATURES["PREVENT_CONCURRENT_LOGINS"] = False
 
 # Disable codejail support
 # explicitely configuring python is necessary to prevent unsafe calls

@@ -4,7 +4,18 @@ Note: Breaking changes between versions are indicated by "💥".
 
 ## Unreleased
 
+## v13.0.1
+
+- [Fix] Missing requirements file in `pip install tutor[full]`.
+
+## v13.0.0
+
 - 💥[Improvement] Upgrade to Maple
+  - Install all official plugins as part of the `tutor[full]` package.
+  - Don't print error messages about loading plugins during autocompletion.
+  - Prompt for image building when upgrading from one release to the next.
+  - 💥 Allow concurrent logins to the LMS and the CMS.
+  - Add `tutor local start --skip-build` option to skip building Docker images.
 - [Feature] Better support of Caddy as a load balancer in Kubernetes:
   - Make it possible to start/stop a selection of resources with ``tutor k8s start/stop [names...]``.
   - Make it easy to deploy an independent LoadBalancer by converting the caddy service to a ClusterIP when ``ENABLE_WEB_PROXY=false``.

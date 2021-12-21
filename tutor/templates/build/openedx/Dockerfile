@@ -47,6 +47,9 @@ RUN git config --global user.email "tutor@overhang.io" \
 # Fix language cookie "samesite" attribute
 # https://github.com/edx/edx-platform/pull/29621
 RUN git fetch --depth=2 https://github.com/regisb/edx-platform 51e0ec3b97ae5badbf947d53ac07bd5496c10cde && git cherry-pick 51e0ec3b97ae5badbf947d53ac07bd5496c10cde
+# Fix forum notification for questions
+# https://github.com/edx/edx-platform/pull/29611
+RUN git fetch --depth=2 https://github.com/open-craft/edx-platform/ 03731f19459e558f188c06aac5cc9ca1bbc675c2 && git cherry-pick 03731f19459e558f188c06aac5cc9ca1bbc675c2
 {% endif %}
 
 {# Example: RUN git fetch --depth=2 https://github.com/edx/edx-platform <GITSHA1> && git cherry-pick <GITSHA1> #}
@@ -76,13 +79,13 @@ COPY --from=code /openedx/edx-platform /openedx/edx-platform
 WORKDIR /openedx/edx-platform
 
 # Install the right version of pip/setuptools
-RUN pip install setuptools==44.1.0 pip==20.3.4 wheel==0.37.0
+RUN pip install setuptools==44.1.0 pip==20.0.2 wheel==0.34.2
 
 # Install base requirements
 RUN pip install -r ./requirements/edx/base.txt
 
 # Install django-redis for using redis as a django cache
-RUN pip install django-redis==5.0.0
+RUN pip install django-redis==4.12.1
 
 # Install uwsgi
 RUN pip install uwsgi==2.0.20
