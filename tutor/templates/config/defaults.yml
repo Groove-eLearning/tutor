@@ -47,7 +47,7 @@ OPENEDX_LMS_UWSGI_WORKERS: 2
 OPENEDX_MYSQL_DATABASE: "openedx"
 OPENEDX_CSMH_MYSQL_DATABASE: "{{ OPENEDX_MYSQL_DATABASE }}_csmh"
 OPENEDX_MYSQL_USERNAME: "openedx"
-OPENEDX_COMMON_VERSION: "open-release/maple.master"
+OPENEDX_COMMON_VERSION: "open-release/maple.beta1"
 OPENEDX_EXTRA_PIP_REQUIREMENTS:
   # TODO upgrade scorm xblock
   - "openedx-scorm-xblock<13.0.0,>=12.0.0"

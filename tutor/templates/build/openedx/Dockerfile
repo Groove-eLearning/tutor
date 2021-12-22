@@ -46,10 +46,10 @@ RUN git config --global user.email "tutor@overhang.io" \
 # Patch edx-platform
 # Fix lms login failure
 # https://github.com/edx/edx-platform/pull/29192/
-# RUN git fetch --depth=2 https://github.com/regisb/edx-platform 29ae263a382dde472ab14bef93fe74813f83f271 && git cherry-pick 29ae263a382dde472ab14bef93fe74813f83f271
+RUN git fetch --depth=2 https://github.com/regisb/edx-platform 29ae263a382dde472ab14bef93fe74813f83f271 && git cherry-pick 29ae263a382dde472ab14bef93fe74813f83f271
 # Add themed asset url
 # https://github.com/edx/edx-platform/pull/29503
-# RUN git fetch --depth=2 https://github.com/regisb/edx-platform 467ff94a82b020769e25fa0bdcf9c23d347f8fb1 && git cherry-pick 467ff94a82b020769e25fa0bdcf9c23d347f8fb1
+RUN git fetch --depth=2 https://github.com/regisb/edx-platform 467ff94a82b020769e25fa0bdcf9c23d347f8fb1 && git cherry-pick 467ff94a82b020769e25fa0bdcf9c23d347f8fb1
 
 {% endif %}
 
