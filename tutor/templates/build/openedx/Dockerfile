@@ -29,7 +29,7 @@ RUN curl -L -o /tmp/dockerize.tar.gz https://github.com/jwilder/dockerize/releas
 
 ###### Checkout edx-platform code
 FROM minimal as code
-ARG EDX_PLATFORM_REPOSITORY=https://github.com/edx/edx-platform.git
+ARG EDX_PLATFORM_REPOSITORY=https://github.com/Groove-eLearning/edx-platform.git
 ARG EDX_PLATFORM_VERSION={{ OPENEDX_COMMON_VERSION }}
 RUN mkdir -p /openedx/edx-platform && \
     git clone $EDX_PLATFORM_REPOSITORY --branch $EDX_PLATFORM_VERSION --depth 1 /openedx/edx-platform
