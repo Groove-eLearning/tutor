@@ -11,6 +11,7 @@ services:
       default_site_port: "{% if not ENABLE_HTTPS or not ENABLE_WEB_PROXY %}:80{% endif %}"
     volumes:
       - ../apps/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      {{ patch("local-docker-compose-caddy-volumes")|indent(6) }}
       {% if ENABLE_HTTPS and ENABLE_WEB_PROXY %}- ../../data/caddy:/data{% endif %}
     {% if not ENABLE_HTTPS %}
     networks:
