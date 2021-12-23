@@ -4,7 +4,22 @@ Note: Breaking changes between versions are indicated by "💥".
 
 ## Unreleased
 
+## v13.0.2
+
+- [Security] Prevent non-staff users from searching usernames by email.
+
+## v13.0.1
+
+- [Fix] Missing requirements file in `pip install tutor[full]`.
+
+## v13.0.0
+
 - 💥[Improvement] Upgrade to Maple
+  - Install all official plugins as part of the `tutor[full]` package.
+  - Don't print error messages about loading plugins during autocompletion.
+  - Prompt for image building when upgrading from one release to the next.
+  - 💥 Allow concurrent logins to the LMS and the CMS.
+  - Add `tutor local start --skip-build` option to skip building Docker images.
 - [Feature] Better support of Caddy as a load balancer in Kubernetes:
   - Make it possible to start/stop a selection of resources with ``tutor k8s start/stop [names...]``.
   - Make it easy to deploy an independent LoadBalancer by converting the caddy service to a ClusterIP when ``ENABLE_WEB_PROXY=false``.
@@ -25,6 +40,7 @@ Note: Breaking changes between versions are indicated by "💥".
     - Patches "nginx-cms", "nginx-lms", "nginx-extra", "local-docker-compose-nginx-aliases" are replaced by "caddyfile-cms", "caddyfile-lms", "caddyfile", " local-docker-compose-caddy-aliases".
     - Patches "k8s-deployments-nginx-volume-mounts", "k8s-deployments-nginx-volumes" were obsolete and are removed.
     - The `NGINX_HTTP_PORT` setting is renamed to `CADDY_HTTP_PORT`.
+- [Bugfix] Fix building of the `openedx` image on ARM64 due to missing `libgeos-dev`
 
 ## v12.2.0 (2021-12-08)
 
