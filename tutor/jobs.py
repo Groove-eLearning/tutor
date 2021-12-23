@@ -81,30 +81,6 @@ def initialise(runner: BaseJobRunner, limit_to: Optional[str] = None) -> None:
     fmt.echo_info("All services initialised.")
 
 
-def initialise_plugin(runner, input_plugin_name):
-    fmt.echo_info("Plugin {}: initializing...".format(input_plugin_name))
-
-    for plugin_name, hook in runner.iter_plugin_hooks("pre-init"):
-        if plugin_name == input_plugin_name:
-            for service in hook:
-                fmt.echo_info("Plugin {}: running pre-init for service {}...".format(plugin_name, service))
-                runner.run_job_from_template(
-                    service, plugin_name, "hooks", service, "pre-init"
-                )
-            break;
-
-    for plugin_name, hook in runner.iter_plugin_hooks("init"):
-        if plugin_name == input_plugin_name:
-            for service in hook:
-                fmt.echo_info("Plugin {}: running init for service {}...".format(plugin_name, service))
-                runner.run_job_from_template(
-                    service, plugin_name, "hooks", service, "init"
-                )
-            break;
-
-    fmt.echo_info("Plugin {}: initialized.".format(input_plugin_name))
-
-
 def create_user_command(
     superuser: str,
     staff: bool,
