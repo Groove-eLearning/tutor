@@ -16,7 +16,7 @@ RUN apt update && \
     xz-utils tk-dev libffi-dev liblzma-dev python-openssl git
 ARG PYTHON_VERSION=3.8.12
 ENV PYENV_ROOT /opt/pyenv
-RUN git clone https://github.com/pyenv/pyenv $PYENV_ROOT --branch v2.1.0 --depth 1
+RUN git clone https://github.com/pyenv/pyenv $PYENV_ROOT --branch v2.2.2 --depth 1
 RUN $PYENV_ROOT/bin/pyenv install $PYTHON_VERSION
 RUN $PYENV_ROOT/versions/$PYTHON_VERSION/bin/python -m venv /openedx/venv
 
@@ -44,13 +44,15 @@ RUN git config --global user.email "tutor@overhang.io" \
 {{ patch("openedx-dockerfile-git-patches-default") }}
 {% else %}
 # Patch edx-platform
-# Fix lms login failure
-# https://github.com/edx/edx-platform/pull/29192/
-# RUN git fetch --depth=2 https://github.com/regisb/edx-platform 29ae263a382dde472ab14bef93fe74813f83f271 && git cherry-pick 29ae263a382dde472ab14bef93fe74813f83f271
-# Add themed asset url
-# https://github.com/edx/edx-platform/pull/29503
-# RUN git fetch --depth=2 https://github.com/regisb/edx-platform 467ff94a82b020769e25fa0bdcf9c23d347f8fb1 && git cherry-pick 467ff94a82b020769e25fa0bdcf9c23d347f8fb1
-
+# Fix language cookie "samesite" attribute
+# https://github.com/edx/edx-platform/pull/29621
+RUN git fetch --depth=2 https://github.com/regisb/edx-platform 51e0ec3b97ae5badbf947d53ac07bd5496c10cde && git cherry-pick 51e0ec3b97ae5badbf947d53ac07bd5496c10cde
+# Fix forum notification for questions
+# https://github.com/edx/edx-platform/pull/29611
+RUN git fetch --depth=2 https://github.com/open-craft/edx-platform/ 03731f19459e558f188c06aac5cc9ca1bbc675c2 && git cherry-pick 03731f19459e558f188c06aac5cc9ca1bbc675c2
+# Fix email search
+# https://github.com/overhangio/edx-platform/commit/78da3d86b79e808462b88f219efb90bf8253a5d1
+RUN git fetch --depth=2 https://github.com/overhangio/edx-platform/ 78da3d86b79e808462b88f219efb90bf8253a5d1 && git cherry-pick 78da3d86b79e808462b88f219efb90bf8253a5d1
 {% endif %}
 
 {# Example: RUN git fetch --depth=2 https://github.com/edx/edx-platform <GITSHA1> && git cherry-pick <GITSHA1> #}
@@ -71,7 +73,7 @@ FROM python as python-requirements
 ENV PATH /openedx/venv/bin:${PATH}
 ENV VIRTUAL_ENV /openedx/venv/
 
-RUN apt update && apt install -y software-properties-common libmysqlclient-dev libxmlsec1-dev
+RUN apt update && apt install -y software-properties-common libmysqlclient-dev libxmlsec1-dev libgeos-dev
 
 # Note that this means that we need to reinstall all requirements whenever there is a
 # change in edx-platform, which sucks. But there is no obvious alternative, as we need
@@ -80,13 +82,13 @@ COPY --from=code /openedx/edx-platform /openedx/edx-platform
 WORKDIR /openedx/edx-platform
 
 # Install the right version of pip/setuptools
-RUN pip install setuptools==44.1.0 pip==20.3.4 wheel==0.37.0
+RUN pip install setuptools==44.1.0 pip==20.0.2 wheel==0.34.2
 
 # Install base requirements
 RUN pip install -r ./requirements/edx/base.txt
 
 # Install django-redis for using redis as a django cache
-RUN pip install django-redis==5.0.0
+RUN pip install django-redis==4.12.1
 
 # Install uwsgi
 RUN pip install uwsgi==2.0.20

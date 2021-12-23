@@ -1,8 +1,12 @@
 appdirs
+boto3==1.19.10
 click>=7.0
 mypy
 pycryptodome
 jinja2
 kubernetes
 pyyaml>=4.2b1
-boto3==1.19.10
+
+# Strongly recommended plugins
+tutor-forum>=13.0.0,<14.0.0
+tutor-mfe>=13.0.0,<14.0.0
