@@ -174,6 +174,8 @@ COPY --chown=app:app ./bin /openedx/bin
 RUN chmod a+x /openedx/bin/*
 ENV PATH /openedx/bin:${PATH}
 
+{{ patch("openedx-pypi") }}
+
 {{ patch("openedx-dockerfile-pre-assets") }}
 
 # Collect production assets. By default, only assets from the default theme
