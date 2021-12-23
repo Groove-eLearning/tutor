@@ -1,10 +1,8 @@
-import boto3
 import click
 import os
 import tarfile
 import subprocess
 
-from botocore.exceptions import NoCredentialsError
 from typing import List
 from datetime import datetime
 from .. import bindmounts
@@ -356,29 +354,6 @@ def backup(context):
                 os.remove(mysql_dump_path)
         except OSError as e:
             fmt.echo_info("Delete mongodb or mysql dump files {} are failed".format(e.strerror))
-        
-        if "BACKUP_ENABLED" in config:
-            if config["BACKUP_ENABLED"]:
-                s3_access_key = config["BACKUP_S3_ACCESS_KEY"]
-                s3_secret_key = config["BACKUP_S3_SECRET_KEY"]
-                s3_bucket_name = config["BACKUP_S3_BUCKET_NAME"]
-
-                s3 = boto3.client(
-                    's3', aws_access_key_id=s3_access_key, aws_secret_access_key=s3_secret_key)
-
-                try:
-                    s3.upload_file(backup_path, s3_bucket_name, file_name)
-                    fmt.echo_info(
-                        "Uploaded backup file {} to S3 successfully".format(file_name))
-                    
-                    if os.path.exists(backup_path):
-                        os.remove(backup_path)
-
-                except FileNotFoundError:
-                    fmt.echo_info(
-                        "The backup file {} was not found".format(file_name))
-                except NoCredentialsError:
-                    fmt.echo_info("The S3 credential is not available")
 
 
 def add_commands(command_group: click.Group) -> None:

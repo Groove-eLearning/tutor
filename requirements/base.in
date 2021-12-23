@@ -1,5 +1,4 @@
 appdirs
-boto3==1.19.10
 click>=7.0
 mypy
 pycryptodome
