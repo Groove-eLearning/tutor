@@ -1,8 +1,10 @@
-import os
-from typing import List
-
 import click
+import os
+import tarfile
+import subprocess
 
+from typing import List
+from datetime import datetime
 from .. import bindmounts
 from .. import config as tutor_config
 from .. import env as tutor_env
@@ -298,6 +300,62 @@ def dc_command(context: BaseComposeContext, command: str, args: List[str]) -> No
     context.job_runner(config).docker_compose(command, *volume_args, *non_volume_args)
 
 
+@click.command(help="Backup mongodb and mysql databases.")
+@click.pass_obj
+def backup(context):
+    now = datetime.now().strftime('%Y%m%d_%H%M%S')
+    config = tutor_config.load(context.root)
+    runner = context.job_runner(config)
+
+    mongodb_command = ["exec", "mongodb", "mongodump", "--out=/data/db/dump_{}.mongodb".format(now)]
+    runner.docker_compose(*mongodb_command)
+    fmt.echo_info("Exported mongo databases successfully")
+
+    mysql_root_pwd = config['MYSQL_ROOT_PASSWORD']
+    mysql_command = ["exec", "mysql"]
+    mysql_command += [
+        "mysqldump", 
+        "--all-databases", 
+        "-u", "root", 
+        "--password={}".format(mysql_root_pwd), 
+        "--result-file=/var/lib/mysql/dump_{}.sql".format(now)
+    ]
+    runner.docker_compose(*mysql_command)
+    fmt.echo_info("Exported mysql databases successfully")
+
+    mongodb_dump_path = tutor_env.data_path(
+        context.root, 'mongodb/dump_{}.mongodb'.format(now))
+    mysql_dump_path = tutor_env.data_path(
+        context.root, 'mysql/dump_{}.sql'.format(now))
+    dirFiles = [
+        mongodb_dump_path,
+        mysql_dump_path,
+        tutor_env.data_path(context.root, 'cms'),
+        tutor_env.data_path(context.root, 'lms'),
+        tutor_env.data_path(context.root, 'openedx-media'),
+    ]
+
+    root_dir = tutor_env.root_dir(context.root)
+    dirFiles.append(root_dir + '/config.yml')
+    file_name = '{}_{}.tar.gz'.format(config['LMS_HOST'], now)
+    backup_path = tutor_env.data_path(context.root, 'backup', file_name)
+
+    utils.ensure_file_directory_exists(backup_path)
+
+    with tarfile.open(backup_path, 'w:gz') as tar:
+        for dir in dirFiles:
+            tar.add(dir, arcname=os.path.basename(dir))
+
+        fmt.echo_info("Created backup file {} successfully".format(file_name))
+
+        try:
+            subprocess.run(["sudo", "rm", "-rf", mongodb_dump_path])
+            if os.path.exists(mysql_dump_path):
+                os.remove(mysql_dump_path)
+        except OSError as e:
+            fmt.echo_info("Delete mongodb or mysql dump files {} are failed".format(e.strerror))
+
+
 def add_commands(command_group: click.Group) -> None:
     command_group.add_command(start)
     command_group.add_command(stop)
@@ -312,3 +370,4 @@ def add_commands(command_group: click.Group) -> None:
     command_group.add_command(bindmount_command)
     command_group.add_command(execute)
     command_group.add_command(logs)
+    command_group.add_command(backup)
