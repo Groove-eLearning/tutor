@@ -7,6 +7,7 @@ CMS_HOST: "studio.{{ LMS_HOST }}"
 CMS_OAUTH2_KEY_SSO: "cms-sso"
 CMS_OAUTH2_KEY_SSO_DEV: "cms-sso-dev"
 CONTACT_EMAIL: "contact@{{ LMS_HOST }}"
+DEV_MODE: true
 DEV_PROJECT_NAME: "{{ TUTOR_APP }}_dev"
 DOCKER_REGISTRY: "docker.io/"
 DOCKER_IMAGE_OPENEDX: "{{ DOCKER_REGISTRY }}edutechdev/openedx:{{ TUTOR_VERSION }}"

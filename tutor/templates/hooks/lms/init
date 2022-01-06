@@ -15,6 +15,7 @@ echo "Loading settings $DJANGO_SETTINGS_MODULE"
   --scopes user_id \
   --skip-authorization \
   --update cms-sso cms
+{% if DEV_MODE is defined and DEV_MODE %}
 ./manage.py lms create_dot_application \
   --grant-type authorization-code \
   --redirect-uris "http://{{ CMS_HOST }}:8001/complete/edx-oauth2/" \
@@ -23,7 +24,7 @@ echo "Loading settings $DJANGO_SETTINGS_MODULE"
   --scopes user_id \
   --skip-authorization \
   --update cms-sso-dev cms
-
+{% endif %}
 
 # Fix incorrect uploaded file path
 if [ -d /openedx/data/uploads/ ]; then
