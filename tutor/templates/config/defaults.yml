@@ -43,7 +43,7 @@ EXTERNAL_NOTES_URL: "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://notes
 EXTERNAL_ANALYTICSAPI_URL: "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://analyticsapi.{{ LMS_HOST }}"
 EXTERNAL_INSIGHTS_URL: "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://insights.{{ LMS_HOST }}"
 JWT_COMMON_AUDIENCE: "openedx"
-JWT_COMMON_ISSUER: "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}/oauth2"
+JWT_COMMON_ISSUER: "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}{% if DEV_MODE %}:8000{% endif %}/oauth2"
 JWT_COMMON_SECRET_KEY: "{{ OPENEDX_SECRET_KEY }}"
 K8S_NAMESPACE: "openedx"
 LANGUAGE_CODE: "en"
