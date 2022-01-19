@@ -26,14 +26,6 @@ ELASTICSEARCH_SCHEME: "http"
 ELASTICSEARCH_HEAP_SIZE: 1g
 ENABLE_HTTPS: false
 ENABLE_WEB_PROXY: true
-INTERNAL_LMS_URL: "http://lms:8000"
-INTERNAL_CMS_URL: "http://cms:8000"
-INTERNAL_DISCOVERY_URL: "http://discovery:8000"
-INTERNAL_CREDENTIALS_URL: "http://credentials:8000"
-INTERNAL_ECOMMERCE_URL: "http://ecommerce:8000"
-INTERNAL_NOTES_URL: "http://notes:8000"
-INTERNAL_ANALYTICSAPI_URL: "http://analyticsapi:8000"
-INTERNAL_INSIGHTS_URL: "http://insights:8000"
 EXTERNAL_LMS_URL: "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}"
 EXTERNAL_CMS_URL: "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ CMS_HOST }}"
 EXTERNAL_DISCOVERY_URL: "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://discovery.{{ LMS_HOST }}"
