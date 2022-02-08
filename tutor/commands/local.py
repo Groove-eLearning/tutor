@@ -39,6 +39,25 @@ class LocalContext(compose.BaseComposeContext):
 @click.pass_context
 def local(context: click.Context) -> None:
     context.obj = LocalContext(context.obj.root)
+    config = tutor_config.load(context.obj.root)
+    dev_mode = config["DEV_MODE"]
+    if dev_mode == True:
+        confirm_to_switch = click.confirm(
+            fmt.question(
+                "Do you want to switch to Production mode?"
+            ),
+            prompt_suffix=" ",
+            default=False,
+        )
+        if confirm_to_switch:
+            fmt.echo_info(
+                "Switching to Production mode. Saving DEV_MODE=false..."
+            )
+            context.invoke(
+                config_save_command,
+                interactive=False,
+                set_vars=[["DEV_MODE", False]]
+            )
 
 
 @click.command(help="Configure and run Open edX from scratch")

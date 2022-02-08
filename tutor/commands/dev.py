@@ -7,6 +7,7 @@ from .. import env as tutor_env
 from .. import fmt
 from ..types import Config, get_typed
 from . import compose
+from .config import save as config_save_command
 
 
 class DevJobRunner(compose.ComposeJobRunner):
@@ -39,6 +40,25 @@ class DevContext(compose.BaseComposeContext):
 @click.pass_context
 def dev(context: click.Context) -> None:
     context.obj = DevContext(context.obj.root)
+    config = tutor_config.load(context.obj.root)
+    dev_mode = config["DEV_MODE"]
+    if dev_mode == False:
+        confirm_to_switch = click.confirm(
+            fmt.question(
+                "Do you want to switch to Development mode?"
+            ),
+            prompt_suffix=" ",
+            default=False,
+        )
+        if confirm_to_switch:
+            fmt.echo_info(
+                "Switching to DEV mode. Saving DEV_MODE=true..."
+            )
+            context.invoke(
+                config_save_command,
+                interactive=False,
+                set_vars=[["DEV_MODE", True]]
+            )
 
 
 @click.command(
