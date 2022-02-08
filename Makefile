@@ -1,11 +1,11 @@
 .DEFAULT_GOAL := help
 .PHONY: docs
-SRC_DIRS = ./tutor ./tests ./bin
+SRC_DIRS = ./tutor ./tests ./bin ./docs
 BLACK_OPTS = --exclude templates ${SRC_DIRS}
 
 ###### Development
 
-docs: ## Build html documentation
+docs: ## Build HTML documentation
 	$(MAKE) -C docs
 
 compile-requirements: ## Compile requirements files
@@ -18,7 +18,7 @@ upgrade-requirements: ## Upgrade requirements files
 	pip-compile --upgrade requirements/dev.in
 	pip-compile --upgrade requirements/docs.in
 
-build-pythonpackage: build-pythonpackage-tutor ## Build python packages ready to upload to pypi
+build-pythonpackage: build-pythonpackage-tutor ## Build Python packages ready to upload to pypi
 
 build-pythonpackage-tutor: ## Build the "tutor" python package for upload to pypi
 	python setup.py sdist
@@ -26,7 +26,7 @@ build-pythonpackage-tutor: ## Build the "tutor" python package for upload to pyp
 push-pythonpackage: ## Push python package to pypi
 	twine upload --skip-existing dist/tutor-$(shell make version).tar.gz
 
-test: test-lint test-unit test-types test-format test-pythonpackage ## Run all tests by decreasing order or priority
+test: test-lint test-unit test-types test-format test-pythonpackage ## Run all tests by decreasing order of priority
 
 test-format: ## Run code formatting tests
 	black --check --diff $(BLACK_OPTS)
@@ -50,8 +50,25 @@ bootstrap-dev: ## Install dev requirements
 	pip install .
 	pip install -r requirements/dev.txt
 
-bootstrap-dev-plugins: bootstrap-dev ## Install dev requirement and all supported plugins
+bootstrap-dev-plugins: bootstrap-dev ## Install dev requirements and all supported plugins
 	pip install -r requirements/plugins.txt
+
+###### Code coverage
+
+coverage: ## Run unit-tests before analyzing code coverage and generate report
+	$(MAKE) --keep-going coverage-tests coverage-report
+
+coverage-tests: ## Run unit-tests and analyze code coverage
+	coverage run -m unittest discover
+
+coverage-report: ## Generate CLI report for the code coverage
+	coverage report
+
+coverage-html: coverage-report ## Generate HTML report for the code coverage
+	coverage html
+
+coverage-browse-report: coverage-html ## Open the HTML report in the browser
+	sensible-browser htmlcov/index.html
 
 ###### Deployment
 
@@ -108,5 +125,5 @@ version: ## Print the current tutor version
 ESCAPE = 
 help: ## Print this help
 	@grep -E '^([a-zA-Z_-]+:.*?## .*|######* .+)$$' Makefile \
-		| sed 's/######* \(.*\)/\n               $(ESCAPE)[1;31m\1$(ESCAPE)[0m/g' \
+		| sed 's/######* \(.*\)/@               $(ESCAPE)[1;31m\1$(ESCAPE)[0m/g' | tr '@' '\n' \
 		| awk 'BEGIN {FS = ":.*?## "}; {printf "\033[33m%-30s\033[0m %s\n", $$1, $$2}'
